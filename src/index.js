@@ -10,8 +10,6 @@ const adapter = new FileSync('setting.json');
 const db = low(adapter);
 
 
-
-
 // let _path = 
 let _runtime = path.join(app.getAppPath(),"..","..","runtime");
 let _runtime_resolve =  path.resolve(_runtime);
@@ -28,15 +26,11 @@ function createWindow() {
             webviewTag: true,
             nodeIntegration: true
         }
-    });
+    })
 
-
-    win.webContents.session.setProxy({proxyRules:"socks5://127.0.0.1:10808"}, function () {
-        win.loadURL("http://pc-play.games.dmm.co.jp/play/taimanin_rpgx/")
-    });
     // 并且为你的应用加载index.html
     //   win.loadFile('main.html')
-    
+    win.loadURL("http://pc-play.games.dmm.co.jp/play/taimanin_rpgx/")
     // 打开开发者工具
     // win.webContents.openDevTools();
     win.removeMenu();
