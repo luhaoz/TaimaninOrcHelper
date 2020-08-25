@@ -1,0 +1,48 @@
+{
+  "name": "dmr",
+  "version": "1.0.0",
+  "main": "electron/main.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "asar": "^3.0.3",
+    "electron": "^9.2.0",
+    "electron-builder": "^22.8.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "build": {
+    "productName": "Orc Helper",
+    "copyright": "Copyright (C) 2020 Luhaoz",
+    "appId": "ORC_HELPER",
+    "files": [
+      "electron/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis"
+        }
+      ]
+    },
+    "nsis": {
+      "shortcutName": "欧克很忙",
+      "oneClick": false,
+      "perMachine": true,
+      "packElevateHelper": true,
+      "allowElevation": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "allowToChangeInstallationDirectory": true
+    },
+    "linux": {
+      "icon": "build/icons"
+    }
+  },
+  "dependencies": {
+    "electron-root-path": "^1.0.16",
+    "lowdb": "^1.0.0"
+  }
+}
