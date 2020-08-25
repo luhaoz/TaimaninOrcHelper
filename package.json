@@ -4,10 +4,12 @@
   "main": "electron/main.js",
   "license": "MIT",
   "scripts": {
-    "start": "electron ."
+    "dev": "cross-env RUN_ENV=development webpack --progress --colors && electron .",
+    "build": "cross-env RUN_ENV=production webpack --progress --colors && electron ."
   },
   "devDependencies": {
     "asar": "^3.0.3",
+    "cross-env": "^7.0.2",
     "electron": "^9.2.0",
     "electron-builder": "^22.8.0",
     "webpack": "^4.44.1",

@@ -5,15 +5,18 @@ const rootPath = require('electron-root-path').rootPath;
 const path = require('path');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
-
-const adapter = new FileSync('setting.json');
-const db = low(adapter);
+const {Application} = require("./core/runtime");
 
 
-// let _path = 
-let _runtime = path.join(app.getAppPath(),"..","..","runtime");
-let _runtime_resolve =  path.resolve(_runtime);
-app.setPath('userData', _runtime_resolve);
+
+
+
+
+
+// const adapter = new FileSync('setting.json');
+// const db = low(adapter);
+
+app.setPath('userData', Application.path().runtime);
 app.commandLine.appendSwitch('disable-site-isolation-trials')
 function createWindow() {
     // 创建浏览器窗口
