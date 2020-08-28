@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu, MenuItem } = require('electron')
 const userDataPath = app.getPath('userData');
 const { webContents } = require('electron')
 const rootPath = require('electron-root-path').rootPath;
@@ -9,41 +9,73 @@ const {Application} = require("./core/runtime");
 
 
 
-
-
-
-
-// const adapter = new FileSync('setting.json');
-// const db = low(adapter);
-
 app.setPath('userData', Application.path().runtime);
 app.commandLine.appendSwitch('disable-site-isolation-trials')
-function createWindow() {
+let createWindow = ()=> {
     // 创建浏览器窗口
-    const win = new BrowserWindow({
+    const _mainWin = new BrowserWindow({
+        title:"欧克很忙",
         width: 1060,
         height: 790,
+        useContentSize:true,
+        webPreferences: {   
+            webSecurity:false,
+            webviewTag: true,
+            nodeIntegration: true
+        }
+    });
+
+    let _menu = new Menu();
+    _menu.append(new MenuItem({ 
+        label: '设置代理', 
+        click() {
+            _proxy.show();
+        } 
+    }))
+
+
+    //porxy
+    const _proxy = new BrowserWindow({
+        title:"设置代理",
+        width: 300,
+        height: 300,
         useContentSize:true,
         webPreferences: {
             webSecurity:false,
             webviewTag: true,
             nodeIntegration: true
-        }
-    })
+        },
+        show: false,
+        parent:_mainWin
+    }); 
+    _proxy.removeMenu();
+    _proxy.on('close',(event)=>{
+        event.preventDefault();
+        _proxy.hide();
+    });
+    _proxy.loadFile(path.join(Application.path().root,"electron","view","proxy.html"))
+
+
+
+
 
     // 并且为你的应用加载index.html
     //   win.loadFile('main.html')
-    win.loadURL("http://pc-play.games.dmm.co.jp/play/taimanin_rpgx/")
+    
     // 打开开发者工具
-    // win.webContents.openDevTools();
-    win.removeMenu();
+    _mainWin.webContents.openDevTools();
+    _mainWin.setMenu(_menu);
     // win.webContents.on('new-window', (event, url, frameName, disposition, options) => {
     //     console.log(event, url, frameName, disposition, options)
     // })
-    win.webContents.on('did-frame-finish-load', function (data) {
-        console.log(webContents.getAllWebContents()
-        );
-        win.webContents.insertCSS(`
+    console.log(__dirname);
+    _mainWin.webContents.session.setProxy({proxyRules:"socks5://127.0.0.1:10808"});
+    _mainWin.loadURL("http://pc-play.games.dmm.co.jp/play/taimanin_rpgx/")
+    // _mainWin.loadURL("https://panopticlick.eff.org/")
+    // win.loadURL('https://www.baidu.com/');
+    // win.loadFile(path.join(Application.path().root,"electron","view","proxy.html"))
+    _mainWin.webContents.on('did-frame-finish-load', function (data) {
+        _mainWin.webContents.insertCSS(`
             html, body {
                 width:960;
                 height:960;
