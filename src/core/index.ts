@@ -1,14 +1,13 @@
-const { app, BrowserWindow } = require('electron')
-const path = require('path');
+import { app, BrowserWindow } from "electron"
+import path from "path"
 export  class Application{
     static path(){
         let _path = {
-            root:null,
-            runtime:null
+            root:"",
+            runtime:""
         };
 
-
-        if(process.env.RUN_ENV === "development"){
+        if(process.env.NODE_ENV === "dev"){
             let _runtime_resolve =  path.resolve(app.getAppPath());
             _path.root = _runtime_resolve;
         }else{
