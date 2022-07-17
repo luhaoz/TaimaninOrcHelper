@@ -2,32 +2,41 @@ import { app, BrowserWindow } from "electron"
 import { Application } from "./core";
 import { session } from 'electron';
 
-app.disableHardwareAcceleration()
-app.commandLine.appendArgument("--disable-site-isolation-trials")
+// app.disableHardwareAcceleration()
+// app.commandLine.appendArgument("--disable-site-isolation-trials")
+// console.log(Application.path().runtime)
+
 console.log(Application.path().runtime)
 app.setPath('userData', Application.path().runtime);
+app.commandLine.appendSwitch('lang', 'ja')
+app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion')
 const createWindow = () => {
     const _mainWin = new BrowserWindow({
         title: "欧克很忙",
         useContentSize: true,
         height: 800,
         width: 1345,
-        // webPreferences: {
-        //     webSecurity: false,
-        //     webviewTag: true,
-        //     nodeIntegration: true
-        // }
+        webPreferences: {
+            backgroundThrottling: false
+        }
     });
     _mainWin.webContents.openDevTools();
 
 
 
     const _pacScript = `function FindProxyForURL(url, host) {
-        // if(host == "pc-play.games.dmm.co.jp"){
-        //     return 'DIRECT';
-        // }
-        if(dnsDomainIs(host, "cdn.idcfcloud.net")){
-            return 'DIRECT';
+        const direct_list = [
+            // "cdn.syndication.twimg.com",
+            "osapi.dmm.com",
+            // ".i-mobile.co.jp",
+            // ".cdn.idcfcloud.net",
+            // "taimanin-rpg.com",
+            // "fledge-asia.creativecdn.com",
+        ];
+        for(const _domain of direct_list){
+            if(dnsDomainIs(host, _domain)){
+                return 'DIRECT';
+            }
         }
         return 'SOCKS5 127.0.0.1:7890';
     }`;
