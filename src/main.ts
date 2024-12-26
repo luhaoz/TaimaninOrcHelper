@@ -1,10 +1,7 @@
 import { app, BrowserWindow } from "electron"
 import { Application } from "./core";
-import { session } from 'electron';
 import puppeteer from "puppeteer"
-// app.disableHardwareAcceleration()
-// app.commandLine.appendArgument("--disable-site-isolation-trials")
-// console.log(Application.path().runtime)
+
 
 console.log(Application.path().runtime)
 app.setPath('userData', Application.path().runtime);
@@ -12,26 +9,6 @@ app.commandLine.appendSwitch('lang', 'ja')
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion')
 app.commandLine.appendSwitch('remote-debugging-port', '7072')
 app.commandLine.appendSwitch('--auto-open-devtools-for-tabs')
-
-
-    // ; (async () => {
-
-
-    //     const page = await browser.pages();
-
-    //     //   let _gamePage = null;
-    //     //   for(const _page of page){
-    //     //     await _page.setViewport({ width: 1345, height: 800 });
-    //     //     const _url = await _page.url()
-    //     //     console.log(_url);
-    //     //     if (_url === "https://pc-play.games.dmm.co.jp/play/taimanin_rpgx/"){
-    //     //         _gamePage = _page;
-    //     //     }
-    //     //   }
-    //     //   await _gamePage!.mouse.click(560, 530, { delay: 1000 });
-
-
-    // })();
 
 
 const createWindow = async () => {
@@ -47,23 +24,27 @@ const createWindow = async () => {
 
 
     //bgm405 bgm601s
-    const _pacScript = `function FindProxyForURL(url, host) {
-        const direct_list = [
-            "pc-play.games.dmm.co.jp",
-            "www.dmm.co.jp",
-            "gtm.games.dmm.co.jp"
-            "accounts.dmm.co.jp",
-            "special.dmm.co.jp",
-            "user-space.cdn.idcfcloud.net"
-        ];
-        for(const _domain of direct_list){
-            if(dnsDomainIs(host, _domain)){
-                return 'PROXY 127.0.0.1:10809';
+        //bgm405 bgm601s
+        const _pacScript = `function FindProxyForURL(url, host) {
+            const direct_list = [
+                "pc-play.games.dmm.co.jp",
+                "www.dmm.co.jp",
+                "gtm.games.dmm.co.jp",
+                "accounts.dmm.co.jp",
+                "special.dmm.co.jp",
+                "user-space.cdn.idcfcloud.net",
+                "www.googletagmanager.com",
+                "www.gstatic.com",
+
+            ]
+            for(const  _domain of direct_list){
+                if(dnsDomainIs(host, _domain)){
+                    return 'PROXY 127.0.0.1:10809';
+                }
             }
-        }
-        // return 'PROXY 127.0.0.1:10809';
-        return  "DIRECT"
-    }`;
+            return    'DIRECT';
+    }
+    `;
     // return 'DIRECT';
     const _pacFile = 'data:text/plain;base64,' + Buffer.from(_pacScript, 'utf8').toString('base64')
 
@@ -83,6 +64,22 @@ const createWindow = async () => {
             const _page = pages[0];
 
 
+            // // 获取Chrome DevTools Protocol客户端
+            // const client = await _page.target().createCDPSession();
+
+            // // 监听Network.requestWillBeSent事件
+            // await client.send('Network.enable');
+            // client.on('Network.requestWillBeSent', (event) => {
+            //     // 检查是否是媒体资源，并且是从磁盘缓存中请求的
+            //     if (
+            //     event.request.resourceType === 'Media' 
+            //     ) {
+            //     console.log(`R === ${event.request.url}`);
+            //     // 在这里可以执行自动化的操作，例如获取资源内容
+            //     }
+            // });
+
+
             _page.emulateTimezone('Asia/Tokyo');
 
             console.log(_page.goto("https://pc-play.games.dmm.co.jp/play/taimanin_rpgx/", ));
@@ -92,29 +89,29 @@ const createWindow = async () => {
 
         if (_current === "https://pc-play.games.dmm.co.jp/play/taimanin_rpgx/"){
              
-                _mainWin.webContents.insertCSS(`
-               html, body {
-                   width:960;
-                   height:960;
-                   overflow: hidden;
-               }
-               .dmm-ntgnavi{
-                   display: none;
-               }
-               .area-naviapp{
-                   display: none;
-               }
-               #area-game{
-                   height:768px;
-                   overflow: hidden;
-               }
-               #foot{
-                   display: none;
-               }
-               .webgl-frame{
-                   display: none;
-               }
-           `)
+        //         _mainWin.webContents.insertCSS(`
+        //        html, body {
+        //            width:960;
+        //            height:960;
+        //            overflow: hidden;
+        //        }
+        //        .dmm-ntgnavi{
+        //            display: none;
+        //        }
+        //        .area-naviapp{
+        //            display: none;
+        //        }
+        //        #area-game{
+        //            height:768px;
+        //            overflow: hidden;
+        //        }
+        //        #foot{
+        //            display: none;
+        //        }
+        //        .webgl-frame{
+        //            display: none;
+        //        }
+        //    `)
         }
     })
 
